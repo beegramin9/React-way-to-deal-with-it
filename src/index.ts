@@ -1,45 +1,119 @@
-/* 객체는 어떻게 넣을까?
-Interface를 통해서, React의 PropTypes와 비슷 */
-interface Human {
-    name :string,
-    age: number,
-    gender: string
-}
-const person = {
-    name :"Nicoloas",
-    age: 24,
-    gender: "male"
+import * as CryptoJS from "crypto-js"
+
+class Block {
+    public index : number;
+    public hash : string;
+    public previousHash : string;
+    public data : string;
+    public timestamp : number;
+
+    /* static method: 클래스 블록 안에 있지만
+    클래스가 생성되지 않았어도(const block = new Block 처럼 instantitation이 안 됐어도) 클래스 바깥에서 불러낼 수 있음 */
+    // 블록의 해쉬 만들기
+    static calculateBlockHash = (
+        index:number, 
+        previousHash: string, 
+        timestamp : number,
+        data : string
+        ) : string => CryptoJS.SHA256(index + previousHash + timestamp + data).toString()
+
+    // 블록 구조를 검증, true/false 값을 리턴
+    static validateStructure = (aBlock: Block) : boolean => {
+        return (
+            typeof aBlock.index === "number" && 
+            typeof aBlock.hash === "string"  && 
+            typeof aBlock.previousHash === "string" &&
+            typeof aBlock.timestamp === "number" &&
+            typeof aBlock.data === "string"
+        )
+    }
+
+
+    constructor(
+        index : number,
+        hash : string,
+        previousHash : string,
+        data : string,
+        timestamp : number
+    ) {
+        this.index = index;
+        this.hash = hash;
+        this.previousHash = previousHash;
+        this.data = data;
+        this.timestamp = timestamp;
+    } 
 }
 
-const name = "Nicoloas",
-    age = 24,
-    gender = "male"
+/* static method라서 가능함 */
+Block.calculateBlockHash
 
-    /* 파라미터에 ?를 쓰면, 선택적이라는 것 */
-const sayHi = (name:string, age:number, gender?:string) : string => {
-    // console.log(`Hello ${name}, you are ${age}, you are a ${gender}`)
-    return `Hello ${name}, you are ${age}, you are a ${gender}`
+
+const genesisBlock : Block = new Block(0,"202020202020","","Hello",123456)
+/* 블록체인은 블록으로 이뤄진 Array 
+이렇게 쓰면 Block만 들어갈 수 있음 */
+
+let blockchain: Block[] = [genesisBlock]
+// blockchain.push("stuff")
+
+const getBlockChain = (): Block[] => blockchain;
+
+const getLatestBlock = (): Block => blockchain[blockchain.length - 1];
+
+const getNewTimeStamp = (): number => Math.round(new Date().getTime() / 1000)
+
+const createNewBlock = (data: string) : Block => {
+    const previousBlock: Block = getLatestBlock();
+    const newIndex: number = previousBlock.index + 1;
+    const nextTimestamp: number = getNewTimeStamp();
+    const newHash: string = Block.calculateBlockHash(newIndex, previousBlock.hash, nextTimestamp, data);
+    const newBlock: Block = new Block(newIndex, newHash, previousBlock.hash, data, nextTimestamp )
+    /* 새로운 블록이 만들어질 때마다 블록체인에 더해줘야 함 */
+    addBlock(newBlock);
     
+    return newBlock
 }
-/* void는 뭐냐?
-함수의 return값의 type을 아무것도 정해주지 않았을 때 void  */
+
+// console.log(createNewBlock("hello"), createNewBlock('bye bye') );
+/* 지금 블록에 블록을 더하는 체인이 아니라 블록을 한개만 가진 서로 다른 블록체인을 만든 것
+그래서 둘 다 인덱스가 1로 나온다. */
+
+const getHashForBlock = (aBlock:Block) :string => Block.calculateBlockHash(aBlock.index, aBlock.previousHash, aBlock.timestamp, aBlock.data)
+
+
+/* 블록 Validation */
+
+const isBlockValid = (candidateBlock/* 현재 블록 */: Block, previousBlock/* 이전 블록 */: Block): boolean => {
+    if (!Block.validateStructure(candidateBlock)) {
+      return false;
+    } else if (previousBlock.index + 1 !== candidateBlock.index) {
+      return false;
+        /* 해쉬가 같은지만 보는 것 */
+    } else if (previousBlock.hash !== candidateBlock.previousHash) {
+      return false;
+        /* 해쉬가 제대로 들어갔는지 보는 것
+        그러면 해쉬를 얻는 함수부터 만들어야지?
+        getHashForBlock 함수 */
+    } else if (getHashForBlock(candidateBlock) !== candidateBlock.hash) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+const addBlock = (candidateBlock: Block) : void => {
+    /* 마지막으로 블록을 블록체인에 더해주면 됨 */
+        if(isBlockValid(candidateBlock,getLatestBlock())) {
+            blockchain.push(candidateBlock)
+        } 
+    }
 
 
 
-/* TS vs JS
-JS에서는 파라미터를 하나 빼먹어도 모르고 컴파일 한다음에 에러를 띄우지만
-TS는 컴파일 하기 전에 이미 2개밖에 안 들어왔다는 걸 알고 컴파일도 못 하게 함 
-게다가 정확히 뭘 빼먹었는지도 알려줌 ㅋㅋ*/
-console.log(sayHi(name, age))
-console.log(sayHi("Wontae", 444, "male"))
+createNewBlock("second block")
+createNewBlock("third block")
+createNewBlock("fourth block")
+createNewBlock("fifth block")
 
-const hiObj = (person : Human) => {
-    /* TS는 person이 Human interface와 똑같은 구조를 가졌는지
-    체크하고 맞으면 OK */
-    return `Hello ${name}, you are ${age}, you are a ${gender}`
-    
-}
-console.log(hiObj(person))
-
+console.log(blockchain)
 
 export {};
