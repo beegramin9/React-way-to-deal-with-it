@@ -50,7 +50,7 @@ const sayHi = (name:string, age:number, gender?:string) : string => {
 /* TS vs JS
 JS에서는 파라미터를 하나 빼먹어도 모르고 컴파일 한다음에 에러를 띄우지만
 TS는 컴파일 하기 전에 이미 2개밖에 안 들어왔다는 걸 알고 컴파일도 못 하게 함 
-게다가 정확히 뭘 빼먹었는지도 알려줌 ㅋㅋ*/
+게다가 정확히 뭘 빼먹었는지도 알려줌*/
 console.log(sayHi(name, age))
 console.log(sayHi("Wontae", 444, "male"))
 

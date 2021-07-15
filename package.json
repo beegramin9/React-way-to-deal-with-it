@@ -1,5 +1,5 @@
 {
-  "name": "TsBlockChain",
+  "name": "Nomad-MakingBlockChain",
   "version": "1.0.0",
   "description": "Learning Typescript by makeing a Blockchain",
   "main": "index.js",

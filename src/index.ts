@@ -45,7 +45,7 @@ class Block {
 }
 
 /* static method라서 가능함 */
-Block.calculateBlockHash
+// Block.calculateBlockHash
 
 
 const genesisBlock : Block = new Block(0,"202020202020","","Hello",123456)
@@ -82,28 +82,28 @@ const getHashForBlock = (aBlock:Block) :string => Block.calculateBlockHash(aBloc
 
 /* 블록 Validation */
 
-const isBlockValid = (candidateBlock/* 현재 블록 */: Block, previousBlock/* 이전 블록 */: Block): boolean => {
-    if (!Block.validateStructure(candidateBlock)) {
+const isBlockValid = (currentBlock/* 현재 블록 */: Block, previousBlock/* 이전 블록 */: Block): boolean => {
+    if (!Block.validateStructure(currentBlock)) {
       return false;
-    } else if (previousBlock.index + 1 !== candidateBlock.index) {
+    } else if (previousBlock.index + 1 !== currentBlock.index) {
       return false;
         /* 해쉬가 같은지만 보는 것 */
-    } else if (previousBlock.hash !== candidateBlock.previousHash) {
+    } else if (previousBlock.hash !== currentBlock.previousHash) {
       return false;
         /* 해쉬가 제대로 들어갔는지 보는 것
         그러면 해쉬를 얻는 함수부터 만들어야지?
         getHashForBlock 함수 */
-    } else if (getHashForBlock(candidateBlock) !== candidateBlock.hash) {
+    } else if (getHashForBlock(currentBlock) !== currentBlock.hash) {
       return false;
     } else {
       return true;
     }
   };
 
-const addBlock = (candidateBlock: Block) : void => {
+const addBlock = (currentBlock: Block) : void => {
     /* 마지막으로 블록을 블록체인에 더해주면 됨 */
-        if(isBlockValid(candidateBlock,getLatestBlock())) {
-            blockchain.push(candidateBlock)
+        if(isBlockValid(currentBlock,getLatestBlock())) {
+            blockchain.push(currentBlock)
         } 
     }
 
@@ -113,6 +113,9 @@ createNewBlock("second block")
 createNewBlock("third block")
 createNewBlock("fourth block")
 createNewBlock("fifth block")
+createNewBlock("sixth block")
+createNewBlock("seventh block")
+
 
 console.log(blockchain)
 
