@@ -5,11 +5,10 @@ type State = {
     clicked: boolean;
     validated: boolean;
 }
-//! DOM을 꼭 사용해야되는 순간
+//! DOM을 꼭 사용해야되는 순간(ref)
 // 특정 돔에 포커스 
 // 스크롤 박스 조작
 // Canvas 요소에 그림 그리기
-
 
 export function Validation() {
     const [state, setState] = useState<State>({
@@ -23,7 +22,7 @@ export function Validation() {
             [e.target.name]: e.target.value
         })
         console.log(state);
-        
+        console.log(1);
     }
 
     const handleButtonClick = (e: React.MouseEvent) => {
