@@ -1,0 +1,11 @@
+@import "~include-media/dist/include-media";
+@import "~open-color/open-color";
+
+@import "utils/mixin";
+@import "utils/variable";
+
+@import "base/base";
+@import "base/typography";
+
+@import "../components/index";
+// 상대경로는 compile되는 main.scss를 중심으로!

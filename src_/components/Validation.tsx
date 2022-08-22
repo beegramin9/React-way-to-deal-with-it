@@ -22,7 +22,6 @@ export function Validation() {
             [e.target.name]: e.target.value
         })
         console.log(state);
-        console.log(1);
     }
 
     const handleButtonClick = (e: React.MouseEvent) => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Routes, Route  } from "react-router-dom";
 import { Main } from './pages';
-import "./css/App.css";
+import "./scss/main.scss";
 type Props = {}
 
 export default function App({}: Props) {
