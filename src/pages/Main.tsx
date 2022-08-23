@@ -1,14 +1,16 @@
 import React from 'react';
-import {TodoTemplate, TodoList, TodoListItem, TodoInsert} from "../components";
+import {Button, Event, Validation, ScrollBoxRef, ScssComponent} from '../components';
 
 type Props = {}
 
 export function Main({}: Props) {
   return (
     <div>
-      <TodoTemplate>
-
-      </TodoTemplate>
+        <Event/>
+        <Button/>
+        <Validation/>
+        <ScrollBoxRef/>
+        <ScssComponent/>
     </div>
   )
 }
